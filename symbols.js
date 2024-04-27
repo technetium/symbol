@@ -453,13 +453,27 @@ let symbols = []
 
 try {
     // Catching invallid json, not an invalid symbol array
-    symbols = JSON.parse(window.localStorage.getItem("symbols"));
+    symbols = sanitise(JSON.parse(window.localStorage.getItem("symbols")));
 } catch(err) {
     console.error(err);
 }
-if (!symbols) {
+if (symbols.length === 0) {
     symbols = symbols_default;
 }
+
+function sanitise(symbols) {
+    if (!Array.isArray(symbols)) {
+        return [];
+    }
+    return symbols.filter((s) => 
+        s !== null &&
+        typeof s === 'object' &&
+        !Array.isArray(s) &&
+        s.hasOwnProperty("glyph") &&
+        s.hasOwnProperty("name")
+    );
+}
+
 
 function search(searchTerm) {
     searchTerm = searchTerm?.toLowerCase() ?? "";
@@ -512,8 +526,14 @@ function editSymbol(elem, classname) {
     input.value = symbols[input.dataset.index][classname];
     input.addEventListener("blur", (e) => handleAction(e.target))
     input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            handleAction(e.target);
+        switch (e.key) {
+            case "Enter":
+                handleAction(e.target);
+                break;
+            case "Escape":
+                e.target.parentElement.textContent = 
+                    symbols[e.target.dataset.index][e.target.dataset.classname];
+                break;
         }
     });
     elemClass.innerHTML = '';
@@ -533,7 +553,14 @@ function removeSymbol(elem) {
     window.localStorage.setItem("symbols", JSON.stringify(symbols));
     elem.remove();
 }
-
+function saveSymbols() {
+    const link = document.createElement("a");
+    const file = new Blob([JSON.stringify(symbols, null, "\t")], { type: 'text/plain' });
+    link.href = URL.createObjectURL(file);
+    link.download = (document.querySelector('input[type="text"]').value || "symbols") + ".json";
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
 
 function renderSymbols(searchTerm) {
     const parent = document.querySelector(".symbols");
@@ -608,12 +635,92 @@ function renderSymbols(searchTerm) {
     }
 }
 
+function openElement(elem) {
+    elem.classList.add("open");
+    elem.dataset.open_counter |= 0;
+    elem.dataset.open_counter++;
+    window.setTimeout((elem) => {
+        elem.dataset.open_counter--;
+        if (+elem.dataset.open_counter === 0) {
+            elem.classList.remove("open");
+        }
+    }, 5000, elem);
+}
+
+function fileHandler(file) {
+    if (file.type === "application/json") {
+        const dataset = document.getElementById("save_symbols").dataset;
+        +dataset.todo++;
+        const reader = new FileReader()
+        reader.readAsText(file)
+        reader.onloadend = () => {
+            +dataset.todo--;
+            try {
+                const content = sanitise(JSON.parse(reader.result));
+                if (content.length) {
+                    if (
+                        !+dataset.uploads && 
+                        !document
+                            .getElementById("save_symbols")
+                            .classList
+                            .contains("open")
+                    ) {
+                        symbols = [];
+                    }
+                    openElement(document.getElementById("save_symbols"));
+                    +dataset.uploads++;
+                    symbols.push(...content);
+                }
+            } catch(err) {
+                console.error(err);
+            }
+            if (!+dataset.todo) {
+                console.log("Number of files loaded:", dataset.uploads);
+                window.localStorage.setItem("symbols", JSON.stringify(symbols));
+                renderSymbols();
+            }
+        }
+    }
+}
+
+function dragOverHandler(ev) {
+  ev.preventDefault();
+  ev.target.classList.add("over");
+}
+
+function dragLeaveHandler(ev) {
+  ev.preventDefault();
+  ev.target.classList.remove("over");
+}
+
+function dropHandler(ev) {
+    // Prevent default behavior (Prevent file from being opened)
+    ev.preventDefault();
+    ev.target.classList.remove("over");
+    document.getElementById("save_symbols").dataset.uploads = 0;
+    document.getElementById("save_symbols").dataset.todo = 0;
+
+    if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    [...ev.dataTransfer.items].forEach((item, i) => {
+        // If dropped items aren't files, reject them
+        if (item.kind === "file") {
+        fileHandler(item.getAsFile());
+        }
+    });
+    } else {
+    // Use DataTransfer interface to access the file(s)
+    [...ev.dataTransfer.files].forEach((file) => {
+        fileHandler(file);
+    });
+    }    
+}
+
 function handleDragStart(e) {
     e.target.classList.add('drag');
     document.getElementsByClassName("symbols")[0].dataset.dragIndex = 
         Array.from(e.target.parentElement.children).indexOf(e.target);
 }
-
 
 function handleDragEnd(e) {
     e.target.classList.remove('drag');
@@ -626,7 +733,8 @@ function handleDragOver(e) {
 }
 
 function handleDragEnter(e) {
-    Array.from(document.getElementsByClassName("over")).forEach(elem => elem.classList.remove("over"));
+    Array.from(document.getElementsByClassName("over"))
+        .forEach(elem => elem.classList.remove("over"));
     let target = e.target;
     while (target) {
         if (target.classList?.contains("symbol")) {
@@ -693,6 +801,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
     document.getElementById("add_symbol").addEventListener("click", () => addSymbol());
+    document.getElementById("save_symbols").addEventListener("click", () => saveSymbols());
     
     window.addEventListener("dblclick", (e) => {
         let target = e.target;
@@ -716,9 +825,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     
-    window.addEventListener("dragstart", handleDragStart);
-    window.addEventListener("dragover", handleDragOver);
-    window.addEventListener("dragenter", handleDragEnter);
-    window.addEventListener("dragend", handleDragEnd);
-    window.addEventListener("drop", handleDrop);
+    document.getElementById("save_symbols").addEventListener("drop", dropHandler);
+    document.getElementById("save_symbols").addEventListener("dragover", dragOverHandler);
+    document.getElementById("save_symbols").addEventListener("dragleave", dragLeaveHandler);
+    
+    document.getElementsByClassName("symbols")[0].addEventListener("dragstart", handleDragStart);
+    document.getElementsByClassName("symbols")[0].addEventListener("dragover", handleDragOver);
+    document.getElementsByClassName("symbols")[0].addEventListener("dragenter", handleDragEnter);
+    document.getElementsByClassName("symbols")[0].addEventListener("dragend", handleDragEnd);
+    document.getElementsByClassName("symbols")[0].addEventListener("drop", handleDrop);
 });

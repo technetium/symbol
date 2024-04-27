@@ -91,7 +91,21 @@ a {
 
 .search > button {
   font-size: 3rem;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
+  padding: 0;
+  text-align: center;
+  width: 3.2rem;
+}
+.search > button#save_symbols {
+  font-size: 1.8rem; /* Prevent the large disk icon to make the button bigger than the others */
+}
+.search > button.open {
+  border-style: dashed;
+}
+
+
+.over#save_symbols {
+  background-color: var(--hover-color);
 }
 
 .symbols {
@@ -138,7 +152,7 @@ a {
 .symbol > .glyph {
   font-size: 60cqw;
   overflow: hidden;
-  width: 100%;
+  width: calc(100% + 3rem);
   white-space: nowrap;
 }
 
@@ -149,13 +163,16 @@ a {
   background-color: var(--main-bg-color);
 }
 
+.symbol > .copy,
 .symbol > .name {
+  bottom: 15%;
   font-size: 1rem;
+  position: absolute;
   text-wrap: nowrap;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: block;
-  width: 100%;
+  width: 80%;
   overflow: hidden;
 }
 .symbol > .name,
@@ -180,8 +197,8 @@ a {
 
 .symbol:hover > .remove:after {
   color: var(--warning-fg-color);
-  content: "❌";
-  font-size: 1.2rem;
+  content: "🗙";
+  font-size: 1.0rem;
   position: absolute;
   top: 0.3rem;
   right: 0.5rem;
