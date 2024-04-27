@@ -450,6 +450,8 @@ const symbols_default = [
 ];
 
 let symbols = []
+let file_drop_zone = null;
+let symbol_drop_zone = null;
 
 try {
     // Catching invallid json, not an invalid symbol array
@@ -649,7 +651,7 @@ function openElement(elem) {
 
 function fileHandler(file) {
     if (file.type === "application/json") {
-        const dataset = document.getElementById("save_symbols").dataset;
+        const dataset = file_drop_zone.dataset;
         +dataset.todo++;
         const reader = new FileReader()
         reader.readAsText(file)
@@ -667,7 +669,7 @@ function fileHandler(file) {
                     ) {
                         symbols = [];
                     }
-                    openElement(document.getElementById("save_symbols"));
+                    openElement(file_drop_zone);
                     +dataset.uploads++;
                     symbols.push(...content);
                 }
@@ -697,8 +699,8 @@ function dropHandler(ev) {
     // Prevent default behavior (Prevent file from being opened)
     ev.preventDefault();
     ev.target.classList.remove("over");
-    document.getElementById("save_symbols").dataset.uploads = 0;
-    document.getElementById("save_symbols").dataset.todo = 0;
+    file_drop_zone.dataset.uploads = 0;
+    file_drop_zone.dataset.todo = 0;
 
     if (ev.dataTransfer.items) {
     // Use DataTransferItemList interface to access the file(s)
@@ -718,7 +720,7 @@ function dropHandler(ev) {
 
 function handleDragStart(e) {
     e.target.classList.add('drag');
-    document.getElementsByClassName("symbols")[0].dataset.dragIndex = 
+    symbol_drop_zone.dataset.dragIndex = 
         Array.from(e.target.parentElement.children).indexOf(e.target);
 }
 
@@ -781,6 +783,9 @@ function handleDrop(e) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+	file_drop_zone = document.getElementById("save_symbols");
+	symbol_drop_zone = document.getElementsByClassName("symbols")[0];
+	
     const search = window.location.hash ? window.location.hash.substring(1) : "";
     renderSymbols(search);
 
@@ -801,7 +806,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
     document.getElementById("add_symbol").addEventListener("click", () => addSymbol());
-    document.getElementById("save_symbols").addEventListener("click", () => saveSymbols());
+    file_drop_zone.addEventListener("click", () => saveSymbols());
     
     window.addEventListener("dblclick", (e) => {
         let target = e.target;
@@ -825,13 +830,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     
-    document.getElementById("save_symbols").addEventListener("drop", dropHandler);
-    document.getElementById("save_symbols").addEventListener("dragover", dragOverHandler);
-    document.getElementById("save_symbols").addEventListener("dragleave", dragLeaveHandler);
+    file_drop_zone.addEventListener("drop", dropHandler);
+    file_drop_zone.addEventListener("dragover", dragOverHandler);
+    file_drop_zone.addEventListener("dragleave", dragLeaveHandler);
     
-    document.getElementsByClassName("symbols")[0].addEventListener("dragstart", handleDragStart);
-    document.getElementsByClassName("symbols")[0].addEventListener("dragover", handleDragOver);
-    document.getElementsByClassName("symbols")[0].addEventListener("dragenter", handleDragEnter);
-    document.getElementsByClassName("symbols")[0].addEventListener("dragend", handleDragEnd);
-    document.getElementsByClassName("symbols")[0].addEventListener("drop", handleDrop);
+    symbol_drop_zone.addEventListener("dragstart", handleDragStart);
+    symbol_drop_zone.addEventListener("dragover", handleDragOver);
+    symbol_drop_zone.addEventListener("dragenter", handleDragEnter);
+    symbol_drop_zone.addEventListener("dragend", handleDragEnd);
+    symbol_drop_zone.addEventListener("drop", handleDrop);
 });
