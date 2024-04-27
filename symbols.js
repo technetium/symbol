@@ -542,17 +542,7 @@ function renderSymbols(searchTerm) {
     const results = search(searchTerm);
     if (results.length === 0) {
         const span = document.createElement("span");
-
-        const p = document.createElement("p");
-        p.textContent = "Can't find what you're looking for?";
-        span.appendChild(p);
-
-        const a = document.createElement("a");
-        a.href = "https://github.com/samwho/symbol.wtf"
-        a.target = "_blank";
-        a.textContent = "Open a PR!";
-        span.appendChild(a);
-
+		span.innerHTML = document.getElementById("no_symbols").innerHTML;
         parent.appendChild(span);
         return;
     }
@@ -576,7 +566,7 @@ function renderSymbols(searchTerm) {
         nameElem.textContent = symbol.name;
 
         copyElem.classList = "copy";
-        copyElem.textContent = "Copied!";
+        copyElem.innerHTML = document.getElementById("copied").innerHTML;
         
         removeElem.classList = "remove";
         

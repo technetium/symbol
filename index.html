@@ -18,11 +18,17 @@
 
 <body>
   <noscript>
-    I'm afraid this site requires JavaScript to function. This is partly because
-    of the click-to-copy functionality, and partly because of the way that the
-    search functionality works. Sorry!
+    I'm afraid this site requires JavaScript to function.
+	This is partly because of the click-to-copy functionality,
+	and partly because of the way that the search functionality works.
+	Sorry!
   </noscript>
 
+  <template id="no_symbols">
+    <p>Can't find what you're looking for?</p>
+	<a href="https://github.com/samwho/symbol.wtf" target="_blank">Open a PR!</a>
+  </template>
+  <template id="copied">Copied!</template>  
   <div class="search">
     <input type="text" autofocus placeholder="Search..." />
     <button id="add_symbol">+</button>
