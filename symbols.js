@@ -143,8 +143,9 @@ function renderNoSymbols(parent) {
     const collectionsElem = span.querySelector("#collections");
     collections.forEach(c => {
         const replace_elem = document.createElement("a");
-        replace_elem.textContent = "[rep]";
-        replace_elem.href = '#';
+        replace_elem.textContent = "⭮";
+        replace_elem.href = "#";
+		replace_elem.title = "Replace";
         replace_elem.addEventListener("click", async (e) => {
             e.preventDefault();
             res = await fetch("./symbol/"+c+".json");
@@ -152,10 +153,12 @@ function renderNoSymbols(parent) {
 			renderSymbols();
         });
         collectionsElem.appendChild(replace_elem);
+		collectionsElem.append
 
         const insert_elem = document.createElement("a");
-        insert_elem.textContent = "[add]";
+        insert_elem.textContent = "⮡";
         insert_elem.href = "#";
+		insert_elem.title = "Append";
         replace_elem.addEventListener("click", async (e) => {
             e.preventDefault();
             openElement(file_drop_zone);

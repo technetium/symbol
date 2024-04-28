@@ -118,7 +118,8 @@ a {
 
 #collections {
 	display: inline-grid;
-	grid-template-columns: 1fr 1fr auto	
+	grid-template-columns: 1fr 1fr auto;
+	font-size: 80%;
 }
 
 #collections a {
