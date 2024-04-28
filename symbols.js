@@ -11,7 +11,7 @@ async function getSymbols() {
 	try {
 		// symbols = sanitise(JSON.parse(window.localStorage.getItem("symbols")));
 		if (symbols.length === 0) {
-			res = await fetch('./symbol/default.json'});
+			res = await fetch('./symbol/default.json');
 			symbols = sanitise(await res.json());
 		}
 	} catch(err) {
