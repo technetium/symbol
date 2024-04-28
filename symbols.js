@@ -160,7 +160,7 @@ function renderNoSymbols(parent) {
             e.preventDefault();
             openElement(file_drop_zone);
             res = await fetch("./symbol/"+c+".json");
-            symbolssymbols.push(...sanitise(await res.json()));
+            symbols.push(...sanitise(await res.json()));
 			renderSymbols();
         })
         collectionsElem.appendChild(insert_elem);
