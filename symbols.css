@@ -116,6 +116,15 @@ a {
   grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
 }
 
+#collections {
+	display: inline-grid;
+	grid-template-columns: 1fr 1fr auto	
+}
+
+#collections a {
+	text-align: left;
+}
+
 .symbols > span {
   text-align: center;
   font-size: 2.5rem;

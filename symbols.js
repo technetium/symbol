@@ -2,31 +2,37 @@ const DISPLAY_BOX = "\u25A1";
 
 // Sam Rose's original set of symbols, will be used as ultimate fallback
 const symbols_default = ["©", "®", "™", "“", "”", "—", "—", "…", "½", "¼", "∞", "é", "á", "à", "ç", "€", "¥", "¢"];
+const collections = [
+    "default",
+    "hebrew",
+    "numberset",
+]
+
 
 let symbols = []
 let file_drop_zone = null;
 let symbol_drop_zone = null;
 
+
 async function getSymbols() {
-	try {
-		// symbols = sanitise(JSON.parse(window.localStorage.getItem("symbols")));
-		if (symbols.length === 0) {
-			res = await fetch('./symbol/default.json');
-			symbols = sanitise(await res.json());
-		}
-	} catch(err) {
-		console.error(err);
-	}
-	console.warn(symbols)
-	if (symbols.length === 0) {
-		symbols = symbols_default
-			.map((s) => {
-				return {
-					glyph: s,
-					name: s
-				};
-			});
-	}
+    try {
+        symbols = sanitise(JSON.parse(window.localStorage.getItem("symbols")));
+        if (symbols.length === 0) {
+            res = await fetch("./symbol/default.json");
+            symbols = sanitise(await res.json());
+        }
+    } catch(err) {
+        console.error(err);
+    }
+    if (symbols.length === 0) {
+        symbols = symbols_default
+            .map((s) => {
+                return {
+                    glyph: s,
+                    name: s
+                };
+            });
+    }
 }
 
 
@@ -36,7 +42,7 @@ function sanitise(symbols) {
     }
     return symbols.filter((s) => 
         s !== null &&
-        typeof s === 'object' &&
+        typeof s === "object" &&
         !Array.isArray(s) &&
         s.hasOwnProperty("glyph") &&
         s.hasOwnProperty("name")
@@ -105,7 +111,7 @@ function editSymbol(elem, classname) {
                 break;
         }
     });
-    elemClass.innerHTML = '';
+    elemClass.innerHTML = "";
     elemClass.appendChild(input);
     input.focus();
 }
@@ -124,11 +130,45 @@ function removeSymbol(elem) {
 }
 function saveSymbols() {
     const link = document.createElement("a");
-    const file = new Blob([JSON.stringify(symbols, null, "\t")], { type: 'text/plain' });
+    const file = new Blob([JSON.stringify(symbols, null, "\t")], { type: "text/plain" });
     link.href = URL.createObjectURL(file);
     link.download = (document.querySelector('input[type="text"]').value || "symbols") + ".json";
     link.click();
     URL.revokeObjectURL(link.href);
+}
+
+function renderNoSymbols(parent) {
+    const span = document.createElement("span"); 
+    span.innerHTML = document.getElementById("no_symbols").innerHTML;
+    const collectionsElem = span.querySelector("#collections");
+    collections.forEach(c => {
+        const replace_elem = document.createElement("a");
+        replace_elem.textContent = "[rep]";
+        replace_elem.href = '#';
+        replace_elem.addEventListener("click", async (e) => {
+            e.preventDefault();
+            res = await fetch('./symbol/default.json');
+            symbols = sanitise(await res.json());
+        });
+        collectionsElem.appendChild(replace_elem);
+
+        const insert_elem = document.createElement("a");
+        insert_elem.textContent = "[add]";
+        insert_elem.href = "#";
+        replace_elem.addEventListener("click", async (e) => {
+            e.preventDefault();
+            openElement(file_drop_zone);
+            res = await fetch('./symbol/default.json');
+            symbols = sanitise(await res.json());
+        })
+        collectionsElem.appendChild(insert_elem);
+        
+        const name_elem = document.createElement("a");
+        name_elem.textContent = c;
+        name_elem.href = "./symbol/"+c+".json";
+        collectionsElem.appendChild(name_elem);
+    });
+    parent.appendChild(span);
 }
 
 function renderSymbols(searchTerm) {
@@ -137,6 +177,8 @@ function renderSymbols(searchTerm) {
 
     const results = search(searchTerm);
     if (results.length === 0) {
+        renderNoSymbols(parent);
+        return;
         const span = document.createElement("span");
         span.innerHTML = document.getElementById("no_symbols").innerHTML;
         parent.appendChild(span);
@@ -286,13 +328,13 @@ function dropHandler(ev) {
 }
 
 function handleDragStart(e) {
-    e.target.classList.add('drag');
+    e.target.classList.add("drag");
     symbol_drop_zone.dataset.dragIndex = 
         Array.from(e.target.parentElement.children).indexOf(e.target);
 }
 
 function handleDragEnd(e) {
-    e.target.classList.remove('drag');
+    e.target.classList.remove("drag");
     Array.from(e.target.parentElement.children).forEach(elem => elem.classList.remove("over"));
 }
 
@@ -350,7 +392,7 @@ function handleDrop(e) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-	await getSymbols();
+    await getSymbols();
     file_drop_zone = document.getElementById("save_symbols");
     symbol_drop_zone = document.getElementsByClassName("symbols")[0];
     
@@ -373,16 +415,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderSymbols(search);
     });
     
-    
-	file_drop_zone.addEventListener("click", () => saveSymbols());
-    
-	window.addEventListener("click", (e) => {
-		console.warn(e);
-		if (e.target.classList.contains("add")) {
-			e.preventDefault();
-			addSymbol();
-		}
-	});
+    window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("add")) {
+            e.preventDefault();
+            addSymbol();
+        }
+    });
     
     window.addEventListener("dblclick", (e) => {
         let target = e.target;
@@ -405,7 +443,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             target = target.parentElement;
         }
     });
-    
+
+    file_drop_zone.addEventListener("click", () => saveSymbols());
     file_drop_zone.addEventListener("drop", dropHandler);
     file_drop_zone.addEventListener("dragover", dragOverHandler);
     file_drop_zone.addEventListener("dragleave", dragLeaveHandler);
