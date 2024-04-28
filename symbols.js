@@ -181,10 +181,6 @@ function renderSymbols(searchTerm) {
     if (results.length === 0) {
         renderNoSymbols(parent);
         return;
-        const span = document.createElement("span");
-        span.innerHTML = document.getElementById("no_symbols").innerHTML;
-        parent.appendChild(span);
-        return;
     }
 
     for (const symbol of results) {
