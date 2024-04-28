@@ -373,8 +373,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderSymbols(search);
     });
     
-    document.getElementById("add_symbol").addEventListener("click", () => addSymbol());
-    file_drop_zone.addEventListener("click", () => saveSymbols());
+    
+	file_drop_zone.addEventListener("click", () => saveSymbols());
+    
+	window.addEventListener("click", (e) => {
+		console.warn(e);
+		if (e.target.classList.contains("add")) {
+			e.preventDefault();
+			addSymbol();
+		}
+	});
     
     window.addEventListener("dblclick", (e) => {
         let target = e.target;
