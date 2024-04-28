@@ -147,8 +147,9 @@ function renderNoSymbols(parent) {
         replace_elem.href = '#';
         replace_elem.addEventListener("click", async (e) => {
             e.preventDefault();
-            res = await fetch('./symbol/default.json');
+            res = await fetch("./symbol/"+c+".json");
             symbols = sanitise(await res.json());
+			renderSymbols();
         });
         collectionsElem.appendChild(replace_elem);
 
@@ -158,8 +159,9 @@ function renderNoSymbols(parent) {
         replace_elem.addEventListener("click", async (e) => {
             e.preventDefault();
             openElement(file_drop_zone);
-            res = await fetch('./symbol/default.json');
-            symbols = sanitise(await res.json());
+            res = await fetch("./symbol/"+c+".json");
+            symbolssymbols.push(...sanitise(await res.json()));
+			renderSymbols();
         })
         collectionsElem.appendChild(insert_elem);
         
