@@ -1,0 +1,112 @@
+[
+	{
+		"glyph": "ä",
+		"name": "a umlaut",
+		"searchTerms": [
+			"Lowercase A Diaeresis",
+			"Lowercase A Trema",
+			"Lowercase A Umlaut"
+		]
+	},
+	{
+		"glyph": "ë",
+		"name": "e umlaut",
+		"searchTerms": [
+			"Lowercase E Diaeresis",
+			"Lowercase E Trema",
+			"Lowercase E Umlaut"
+		]
+	},
+	{
+		"glyph": "ï",
+		"name": "i umlaut",
+		"searchTerms": [
+			"Lowercase I Diaeresis",
+			"Lowercase I Trema",
+			"Lowercase I Umlaut"
+		]
+	},
+	{
+		"glyph": "ö",
+		"name": "o umlaut",
+		"searchTerms": [
+			"Lowercase O Diaeresis",
+			"Lowercase O Trema",
+			"Lowercase O Umlaut"
+		]
+	},
+	{
+		"glyph": "ü",
+		"name": "u umlaut",
+		"searchTerms": [
+			"Lowercase U Diaeresis",
+			"Lowercase U Trema",
+			"Lowercase U Umlaut"
+		]
+	},
+	{
+		"glyph": "ß",
+		"name": "eszett",
+		"searchTerms": [
+			"Lowercase Eszett",
+			"Lowercase scharfes S",
+			"Lowercase SZ",
+			"Lowercase SS"
+		]
+	},
+	{
+		"glyph": "Ä",
+		"name": "A umlaut",
+		"searchTerms": [
+			"Uppercase A Diaeresis",
+			"Uppercase A Trema",
+			"Uppercase A Umlaut"
+		]
+	},
+	{
+		"glyph": "Ë",
+		"name": "E umlaut",
+		"searchTerms": [
+			"Uppercase E Diaeresis",
+			"Uppercase E Trema",
+			"Uppercase E Umlaut"
+		]
+	},
+	{
+		"glyph": "Ï",
+		"name": "I umlaut",
+		"searchTerms": [
+			"Uppercase I Diaeresis",
+			"Uppercase I Trema",
+			"Uppercase I Umlaut"
+		]
+	},
+	{
+		"glyph": "Ö",
+		"name": "O umlaut",
+		"searchTerms": [
+			"Uppercase O Diaeresis",
+			"Uppercase O Trema",
+			"Uppercase O Umlaut"
+		]
+	},
+	{
+		"glyph": "Ü",
+		"name": "U umlaut",
+		"searchTerms": [
+			"Uppercase U Diaeresis",
+			"Uppercase U Trema",
+			"Uppercase U Umlaut"
+		]
+	},
+	{
+		"glyph": "ẞ",
+		"name": "Eszett",
+		"searchTerms": [
+			"Uppercase Eszett",
+			"Uppercase scharfes S",
+			"Uppercase SZ",
+			"Uppercase SS"
+		]
+	}
+]
