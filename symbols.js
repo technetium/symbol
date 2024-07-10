@@ -4,6 +4,7 @@ const DISPLAY_BOX = "\u25A1";
 const symbols_default = ["©", "®", "™", "“", "”", "—", "—", "…", "½", "¼", "∞", "é", "á", "à", "ç", "€", "¥", "¢"];
 const collections = [
     "default",
+    "german",
     "hebrew",
     "numberset",
 ]
