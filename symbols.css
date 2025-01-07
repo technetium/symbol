@@ -177,7 +177,6 @@ a {
 .symbol > .name {
   bottom: 15%;
   font-size: 1rem;
-  position: absolute;
   text-wrap: nowrap;
   white-space: nowrap;
   text-overflow: ellipsis;
